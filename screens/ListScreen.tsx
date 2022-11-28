@@ -19,6 +19,24 @@ const Width = Dimensions.get('window').width - 30;
 
 type Props = NativeStackScreenProps<RootStackParams, 'ListDetailScreen'>;
 
+const ModifyData = data => {
+  const numColumns = 3;
+  const addBannerAfterIndex = 5;
+  const arr = data;
+  console.log(2277, data);
+  data?.forEach((val, index) => {
+    // if (index % numColumns === 0 && index !== 0) {
+    //   arr.push(tmp);
+    //   tmp = [];
+    // }
+    if (index === addBannerAfterIndex) {
+      arr.push([{type: 'banner'}]);
+    }
+  });
+  console.log(4041, arr);
+  return arr;
+};
+
 const ListScreen = ({navigation}: Props) => {
   const [issueLists, setIssueLists] = useState<IssueList[] | null>(null);
 
@@ -30,10 +48,12 @@ const ListScreen = ({navigation}: Props) => {
     })();
   }, []);
 
+    const modifiedData = ModifyData(issueLists);
+    console.log(5454, modifiedData);
+
   return (
     <SafeAreaView>
       <Container>
-        <Title>ListScreen</Title>
         <FlatList
           data={issueLists}
           scrollEnabled={true}
@@ -41,6 +61,7 @@ const ListScreen = ({navigation}: Props) => {
           showsVerticalScrollIndicator={false}
           ListFooterComponent={() => <FootHolder px={50} />}
           ItemSeparatorComponent={() => <Holder px={Width} />}
+          ListHeaderComponent={() => <Title>Angular / Angular-cli</Title>}
           renderItem={({item, index}) => {
             const createdDate =
               item.created_at.slice(0, 4) +
@@ -53,7 +74,9 @@ const ListScreen = ({navigation}: Props) => {
               <View style={{width: Width}}>
                 <TouchableOpacity
                   style={{flexDirection: 'row'}}
-                  onPress={() => navigation.navigate('ListDetailScreen')}>
+                  onPress={() =>
+                    navigation.navigate('ListDetailScreen', {item: item})
+                  }>
                   <View style={{flexDirection: 'column'}}>
                     <SubTitle numberOfLines={1}>
                       #{item.number} {item.title}
@@ -88,6 +111,7 @@ const Title = styled.Text`
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 25px;
+  text-align: center;
 `;
 
 const SubTitle = styled.Text`

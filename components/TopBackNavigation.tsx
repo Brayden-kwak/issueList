@@ -10,19 +10,26 @@ const TopBackNavigation = () => {
   return (
     <Container>
       <TouchableHighlight
-        style={{width: 40, height: 40}}
+        style={{
+          width: 40,
+          height: 40,
+          borderRadius: 8,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
         underlayColor="#f0ddcc"
         onPress={() => {
           navigation.goBack();
         }}>
-        <BackIcon color="#000" size={20} />
+        <BackIcon color="#000" size={30} />
       </TouchableHighlight>
     </Container>
   );
 };
 
+export default TopBackNavigation;
+
 const Container = styled.View`
   flex-direction: row;
+  margin-left: -5;
 `;
-
-export default TopBackNavigation;
