@@ -19,23 +19,27 @@ const Width = Dimensions.get('window').width - 30;
 
 type Props = NativeStackScreenProps<RootStackParams, 'ListDetailScreen'>;
 
-const ModifyData = data => {
-  const numColumns = 3;
-  const addBannerAfterIndex = 5;
-  const arr = data;
-  console.log(2277, data);
-  data?.forEach((val, index) => {
-    // if (index % numColumns === 0 && index !== 0) {
-    //   arr.push(tmp);
-    //   tmp = [];
-    // }
-    if (index === addBannerAfterIndex) {
-      arr.push([{type: 'banner'}]);
-    }
-  });
-  console.log(4041, arr);
-  return arr;
-};
+// const ModifyData = data => {
+//   const numColumns = 3;
+//   const addBannerAfterIndex = 5;
+//   const arr = data;
+//   let tmp = [];
+//   console.log(2277, data);
+//   data?.forEach((val, index) => {
+//     // if (index % numColumns === 0 && index !== 0) {
+//     //   arr.push(tmp);
+//     //   tmp = [];
+//     // }
+//     if (addBannerAfterIndex && index !== 0) {
+//       arr.push([{type: 'banner'}]);
+//       tmp = [];
+//     }
+//     tmp.push(val);
+//   });
+//   arr.push(tmp);
+//   console.log(4041, arr);
+//   return arr;
+// };
 
 const ListScreen = ({navigation}: Props) => {
   const [issueLists, setIssueLists] = useState<IssueList[] | null>(null);
@@ -48,8 +52,8 @@ const ListScreen = ({navigation}: Props) => {
     })();
   }, []);
 
-    const modifiedData = ModifyData(issueLists);
-    console.log(5454, modifiedData);
+  //   const modifiedData = ModifyData(issueLists);
+  //   console.log(5454, modifiedData);
 
   return (
     <SafeAreaView>
