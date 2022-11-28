@@ -1,11 +1,27 @@
 import React from 'react';
-import {SafeAreaView, Text} from 'react-native';
+import {SafeAreaView} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import ListDetailScreen from './screens/ListDetailScreen';
+import ListScreen from './screens/ListScreen';
+
+export type RootStackParams = {
+  ListScreen: undefined;
+  ListDetailScreen: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParams>();
 
 const App = () => {
   return (
-    <SafeAreaView>
-      <Text>Things Flow</Text>
-    </SafeAreaView>
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="ListScreen"
+        screenOptions={() => ({headerShown: false})}>
+        <Stack.Screen name="ListScreen" component={ListScreen} />
+        <Stack.Screen name="ListDetailScreen" component={ListDetailScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
