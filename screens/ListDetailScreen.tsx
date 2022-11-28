@@ -1,11 +1,16 @@
-import {View, Text} from 'react-native';
+import {View, Text, SafeAreaView} from 'react-native';
 import React from 'react';
+import TopBackNavigation from '../components/TopBackNavigation';
 
 const ListDetailScreen = () => {
   return (
-    <View>
-      <Text>ListDetailScreen</Text>
-    </View>
+    <SafeAreaView>
+      <TopBackNavigation />
+
+      <View>
+        <Text>ListDetailScreen</Text>
+      </View>
+    </SafeAreaView>
   );
 };
 
