@@ -1,17 +1,18 @@
-import {View, Text, SafeAreaView, Dimensions, Image, ScrollView} from 'react-native';
-import React from 'react';
+import {Text, SafeAreaView, Dimensions, Image, ScrollView} from 'react-native';
+import {useContext} from 'react';
+import {Context} from '../Context/Provider';
 import TopBackNavigation from '../components/TopBackNavigation';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParams} from '../App';
 import styled from 'styled-components/native';
 import {Holder} from '../components/Holder';
 
-
 const Width = Dimensions.get('window').width - 30;
 
 type Props = NativeStackScreenProps<RootStackParams, 'ListDetailScreen'>;
 
 const ListDetailScreen = ({route}: Props) => {
+  const {title} = useContext(Context);
   const details = route.params;
 
   const createdDate =
@@ -27,7 +28,7 @@ const ListDetailScreen = ({route}: Props) => {
       <Container>
         <Header>
           <TopBackNavigation />
-          <Title>Angular / Angular-cli</Title>
+          <Title>{title}</Title>
         </Header>
 
         <ScrollView showsVerticalScrollIndicator={false}>

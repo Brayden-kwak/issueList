@@ -5,8 +5,10 @@ import {
   TouchableOpacity,
   Dimensions,
   SafeAreaView,
+  Image,
+  Linking,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import IssueApi, {IssueList} from '../api/IssueApi';
 import {Holder} from '../components/Holder';
@@ -14,46 +16,38 @@ import {FootHolder} from '../components/FootHolder';
 import styled from 'styled-components/native';
 import SortComments from '../components/SortComments';
 import {RootStackParams} from '../App';
-
+import {Context} from '../Context/Provider';
 const Width = Dimensions.get('window').width - 30;
 
 type Props = NativeStackScreenProps<RootStackParams, 'ListDetailScreen'>;
 
-// const ModifyData = data => {
-//   const numColumns = 3;
-//   const addBannerAfterIndex = 5;
-//   const arr = data;
-//   let tmp = [];
-//   console.log(2277, data);
-//   data?.forEach((val, index) => {
-//     // if (index % numColumns === 0 && index !== 0) {
-//     //   arr.push(tmp);
-//     //   tmp = [];
-//     // }
-//     if (addBannerAfterIndex && index !== 0) {
-//       arr.push([{type: 'banner'}]);
-//       tmp = [];
-//     }
-//     tmp.push(val);
-//   });
-//   arr.push(tmp);
-//   console.log(4041, arr);
-//   return arr;
-// };
-
 const ListScreen = ({navigation}: Props) => {
-  const [issueLists, setIssueLists] = useState<IssueList[] | null>(null);
+  const [issueLists, setIssueLists] = useState<IssueList | null>(null);
+  const {title} = useContext(Context);
+  const url = 'https://thingsflow.com/ko/home';
 
   useEffect(() => {
     (async () => {
       const issueListFromApi = await IssueApi();
       const sortedIssueListByComments = SortComments(issueListFromApi);
+      const adType: IssueList = {
+        number: 0,
+        title: '',
+        user: {id: 0, login: '', avatar_url: ''},
+        created_at: '',
+        comments: 0,
+        body: '',
+        type: 'ad',
+      };
+      sortedIssueListByComments.splice(4, 0, adType);
       setIssueLists(sortedIssueListByComments);
     })();
   }, []);
 
-  //   const modifiedData = ModifyData(issueLists);
-  //   console.log(5454, modifiedData);
+  const onPress = () =>
+    Linking.canOpenURL(url).then(() => {
+      Linking.openURL(url);
+    });
 
   return (
     <SafeAreaView>
@@ -65,7 +59,7 @@ const ListScreen = ({navigation}: Props) => {
           showsVerticalScrollIndicator={false}
           ListFooterComponent={() => <FootHolder px={50} />}
           ItemSeparatorComponent={() => <Holder px={Width} />}
-          ListHeaderComponent={() => <Title>Angular / Angular-cli</Title>}
+          ListHeaderComponent={() => <Title>{title}</Title>}
           renderItem={({item, index}) => {
             const createdDate =
               item.created_at.slice(0, 4) +
@@ -74,25 +68,38 @@ const ListScreen = ({navigation}: Props) => {
               '월' +
               item.created_at.slice(8, 9) +
               '일';
+
             return (
               <View style={{width: Width}}>
-                <TouchableOpacity
-                  style={{flexDirection: 'row'}}
-                  onPress={() =>
-                    navigation.navigate('ListDetailScreen', {item: item})
-                  }>
-                  <View style={{flexDirection: 'column'}}>
-                    <SubTitle numberOfLines={1}>
-                      #{item.number} {item.title}
-                    </SubTitle>
-                    <SubTitle2 numberOfLines={1}>
-                      <Text>
-                        작성자:{item.user.login} | 작성일: {createdDate}
-                      </Text>
-                    </SubTitle2>
-                  </View>
-                  <SubTitle3>코멘트: {item.comments}</SubTitle3>
-                </TouchableOpacity>
+                {item.type === 'ad' && (
+                  <TouchableOpacity onPress={onPress}>
+                    <Image
+                      source={{
+                        uri: 'https://hellobot-test.s3.ap-northeast-2.amazonaws.com/image/01fdd797-0477-4717-8d70-8551150463f7',
+                      }}
+                      style={{width: Width, height: 60}}
+                    />
+                  </TouchableOpacity>
+                )}
+                {item.type !== 'ad' && (
+                  <TouchableOpacity
+                    style={{flexDirection: 'row'}}
+                    onPress={() =>
+                      navigation.navigate('ListDetailScreen', {item: item})
+                    }>
+                    <View style={{flexDirection: 'column'}}>
+                      <SubTitle numberOfLines={1}>
+                        #{item.number} {item.title}
+                      </SubTitle>
+                      <SubTitle2 numberOfLines={1}>
+                        <Text>
+                          작성자:{item.user.login} | 작성일: {createdDate}
+                        </Text>
+                      </SubTitle2>
+                    </View>
+                    <SubTitle3>코멘트: {item.comments}</SubTitle3>
+                  </TouchableOpacity>
+                )}
               </View>
             );
           }}
